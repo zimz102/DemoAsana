@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Báo cáo Khách du lịch Hàng ngày</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .report {
+            margin-top: 20px;
+        }
+
+        .date-selector {
+            margin-bottom: 10px;
+        }
+
+        .report-content {
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Báo cáo Khách du lịch Hàng ngày</h1>
+        <div class="report">
+            <div class="date-selector">
+                <label for="date">Chọn ngày:</label>
+                <input type="date" id="date">
+                <button id="view-report">Xem báo cáo</button>
+            </div>
+            <div class="report-content">
+                <h2 id="report-date"></h2>
+                <p>Tổng số khách du lịch: <span id="total-visitors">0</span></p>
+                <div class="chart-container">
+                    <canvas id="visitor-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const dateInput = document.getElementById('date');
+        const viewReportButton = document.getElementById('view-report');
+        const reportDate = document.getElementById('report-date');
+        const totalVisitors = document.getElementById('total-visitors');
+        const visitorChartCanvas = document.getElementById('visitor-chart');
+
+        viewReportButton.addEventListener('click', () => {
+            const selectedDate = dateInput.value;
+            if (selectedDate) {
+                // Giả định dữ liệu từ API hoặc cơ sở dữ liệu
+                const reportData = getReportData(selectedDate);
+                displayReport(reportData);
+            }
+        });
+
+        function getReportData(date) {
+            // Thay thế bằng dữ liệu thực tế từ API hoặc cơ sở dữ liệu
+            // Dữ liệu giả định cho ví dụ
+            const visitorsPerHour = Array.from({ length: 24 }, () => Math.floor(Math.random() * 50));
+            return {
+                date: date,
+                totalVisitors: visitorsPerHour.reduce((a, b) => a + b, 0),
+                visitorsPerHour: visitorsPerHour
+            };
+        }
+
+        function displayReport(data) {
+            reportDate.textContent = `Ngày: ${data.date}`;
+            totalVisitors.textContent = data.totalVisitors;
+            displayChart(data.visitorsPerHour);
+        }
+
+        function displayChart(visitorsPerHour) {
+            new Chart(visitorChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+                    datasets: [{
+                        label: 'Số lượng khách du lịch',
+                        data: visitorsPerHour,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
